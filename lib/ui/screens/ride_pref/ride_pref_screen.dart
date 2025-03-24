@@ -38,76 +38,80 @@ class RidePrefScreen extends StatelessWidget {
     // 3 - Update the state -- TODO: Implement state management
   }
 
-  @override
-  Widget build(BuildContext context) {
-    RidesPreferencesProvider ridePrefProvider =
-        Provider.of(context, listen: true);
+  Widget _buildSuccessUI(BuildContext context,RidesPreferencesProvider ridePrefProvider) {
+    RidePreference? currentRidePreference = ridePrefProvider.currentPreference;
+    List<RidePreference> pastPreferences = ridePrefProvider.preferencesHistory;
+    print(pastPreferences);
+    return Stack(
+      children: [
+        // 1 - Background  Image
+        BlaBackground(),
 
-    AsyncValue ridePrefsValue = ridePrefProvider.pastPreferences;
-
-    switch (ridePrefsValue.state) {
-      case AsyncValueState.loading:
-        return BlaError(message: "loading");
-      case AsyncValueState.error:
-        return BlaError(message: "No connection. Try Later");
-      case AsyncValueState.success:
-        RidePreference? currentRidePreference =
-            ridePrefProvider.currentPreference;
-        List<RidePreference> pastPreferences =
-            ridePrefProvider.preferencesHistory;
-        return Stack(
+        // 2 - Foreground content
+        Column(
           children: [
-            // 1 - Background  Image
-            BlaBackground(),
+            SizedBox(height: BlaSpacings.m),
+            Text(
+              "Your pick of rides at low price",
+              style: BlaTextStyles.heading.copyWith(color: Colors.white),
+            ),
+            SizedBox(height: 100),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: BlaSpacings.xxl),
+              decoration: BoxDecoration(
+                color: Colors.white, // White background
+                borderRadius: BorderRadius.circular(16), // Rounded corners
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // 2.1 Display the Form to input the ride preferences
+                  RidePrefForm(
+                      initialPreference: currentRidePreference,
+                      onSubmit: (newPreference) =>
+                          onRidePrefSelected(context, newPreference)),
+                  SizedBox(height: BlaSpacings.m),
 
-            // 2 - Foreground content
-            Column(
-              children: [
-                SizedBox(height: BlaSpacings.m),
-                Text(
-                  "Your pick of rides at low price",
-                  style: BlaTextStyles.heading.copyWith(color: Colors.white),
-                ),
-                SizedBox(height: 100),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: BlaSpacings.xxl),
-                  decoration: BoxDecoration(
-                    color: Colors.white, // White background
-                    borderRadius: BorderRadius.circular(16), // Rounded corners
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // 2.1 Display the Form to input the ride preferences
-                      RidePrefForm(
-                          initialPreference: currentRidePreference,
-                          onSubmit: (newPreference) =>
-                              onRidePrefSelected(context, newPreference)),
-                      SizedBox(height: BlaSpacings.m),
-
-                      // 2.2 Optionally display a list of past preferences
-                      SizedBox(
-                        height: 200, // Set a fixed height
-                        child: ListView.builder(
-                          shrinkWrap: true, // Fix ListView height issue
-                          physics: AlwaysScrollableScrollPhysics(),
-                          itemCount: pastPreferences.length,
-                          itemBuilder: (ctx, index) => RidePrefHistoryTile(
-                            ridePref: pastPreferences[index],
-                            onPressed: () => onRidePrefSelected(
-                                context, pastPreferences[index]),
-                          ),
-                        ),
+                  // 2.2 Optionally display a list of past preferences
+                  SizedBox(
+                    height: 200, // Set a fixed height
+                    child: ListView.builder(
+                      shrinkWrap: true, // Fix ListView height issue
+                      physics: AlwaysScrollableScrollPhysics(),
+                      itemCount: pastPreferences.length,
+                      itemBuilder: (ctx, index) => RidePrefHistoryTile(
+                        ridePref: pastPreferences[index],
+                        onPressed: () =>
+                            onRidePrefSelected(context, pastPreferences[index]),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
-        );
-    }
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<RidesPreferencesProvider>(
+      builder: (context, ridePrefProvider, _) {
+        print("Rebuilding UI with state: ${ridePrefProvider.pastPreferences.state}");
+        AsyncValue ridePrefsValue = ridePrefProvider.pastPreferences;
+        switch (ridePrefsValue.state) {
+          case AsyncValueState.loading:
+            return BlaError(message: "loading");
+          case AsyncValueState.error:
+            return BlaError(message: "No connection. Try Later");
+          case AsyncValueState.success:
+            return _buildSuccessUI(context, ridePrefProvider);
+        }
+      },
+    );
   }
 }
 

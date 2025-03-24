@@ -5,29 +5,23 @@ import 'package:week_3_blabla_project/data/repository/ride_preferences_repositor
 
 class RidesPreferencesProvider extends ChangeNotifier {
   RidePreference? _currentPreference;
-  // Initialize pastPreferences as AsyncValue.loading() to handle the loading state
   AsyncValue<List<RidePreference>> pastPreferences = AsyncValue.loading();
 
   final RidePreferencesRepository repository;
 
   RidesPreferencesProvider({required this.repository}) {
-    // Fetch past preferences when the provider is created
     _fetchPastPreferences();
   }
 
   void _fetchPastPreferences() async {
-    pastPreferences = AsyncValue.loading();
-    notifyListeners();
-
     try {
       List<RidePreference> pastPrefs = await repository.getPastPreferences();
-      print(pastPrefs); // Useful for debugging
-
+      print("Fetched preferences: $pastPrefs");
       pastPreferences = AsyncValue.success(pastPrefs);
-    } catch (e) {
+    } catch (e, stacktrace) {
+      print("Error fetching preferences: $e\nStackTrace: $stacktrace"); // Debug
       pastPreferences = AsyncValue.error(e);
     }
-
     notifyListeners();
   }
 
@@ -42,17 +36,15 @@ class RidesPreferencesProvider extends ChangeNotifier {
   }
 
   void _addPreference(RidePreference preference) async {
-    // Safely check if the preference already exists in the list
     if (pastPreferences.data != null &&
         !pastPreferences.data!.contains(preference)) {
-      await repository.addPreference(preference);
-      _fetchPastPreferences(); // Refresh the preferences after adding a new one
+      await repository.addPastPreference(preference);
+      _fetchPastPreferences();
     }
   }
 
   // History is returned from newest to oldest preference
   List<RidePreference> get preferencesHistory {
-    // Safely check for null before accessing data
     return pastPreferences.data?.reversed.toList() ?? [];
   }
 }
