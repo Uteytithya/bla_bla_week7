@@ -1,3 +1,4 @@
 {
-    "java.compile.nullAnalysis.mode": "disabled"
+    "java.compile.nullAnalysis.mode": "disabled",
+    "cmake.sourceDirectory": "D:/Flutter/GEN-09-FLUTTER-2-BLA-W7-START/linux"
 }

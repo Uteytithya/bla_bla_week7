@@ -16,6 +16,14 @@ class RidePreference {
       required this.arrival,
       required this.requestedSeats});
 
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is RidePreference && other.departure == departure && other.departureDate == departureDate && other.arrival == arrival && other.requestedSeats == requestedSeats;
+  }
+
+  @override
+  int get hashCode => departure.hashCode ^ departureDate.hashCode ^ arrival.hashCode ^ requestedSeats.hashCode;
+
   @override
   String toString() {
     return 'RidePref(departure: ${departure.name}, '
