@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:week_3_blabla_project/ui/provider/RidesPreferenceProvider.dart';
+import 'package:week_3_blabla_project/ui/provider/rides_preferences_provider.dart';
 import 'package:week_3_blabla_project/ui/provider/async_value.dart';
 import 'package:week_3_blabla_project/ui/widgets/errors/bla_error_screen.dart';
 

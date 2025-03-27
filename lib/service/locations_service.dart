@@ -30,13 +30,14 @@ class LocationsService {
     return _instance!;
   }
 
-  List<Location> getLocations() {
-    return repository.getLocations();
+  Future<List<Location>> getLocations() async {
+    List<Location> locations = await repository.getLocations();
+    return locations;
   }
 
-  List<Location> getLocationsFor(String text) {
-    return repository
-        .getLocations()
+  Future<List<Location>> getLocationsFor(String text) async {
+    List<Location> locations = await repository.getLocations();
+    return locations
         .where((location) =>
             location.name.toUpperCase().contains(text.toUpperCase()))
         .toList();

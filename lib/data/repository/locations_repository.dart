@@ -1,5 +1,5 @@
 import '../../model/location/locations.dart';
 
 abstract class LocationsRepository {
-  List<Location> getLocations();
+  Future<List<Location>> getLocations();
 }

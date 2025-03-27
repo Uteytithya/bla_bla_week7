@@ -19,9 +19,12 @@ class MockLocationsRepository extends LocationsRepository {
     name: "Battambang",
     country: Country.cambodia,
   );
-
+  
   @override
-  List<Location> getLocations() {
-    return [phnomPenh, siemReap, sihanoukville, kampot, battambang];
+  Future<List<Location>> getLocations() {
+    // TODO: implement getLocations
+    throw UnimplementedError();
   }
+
+  
 }

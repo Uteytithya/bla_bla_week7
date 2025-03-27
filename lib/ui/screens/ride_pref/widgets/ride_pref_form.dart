@@ -89,7 +89,7 @@ class _RidePrefFormState extends State<RidePrefForm> {
     // 1- Select a location
     Location? selectedLocation = await Navigator.of(context).push<Location>(
       AnimationUtils.createBottomToTopRoute(
-        BlaLocationPicker(initLocation: departure),
+        BlaLocationPicker(),
       ),
     );
 
@@ -105,7 +105,7 @@ class _RidePrefFormState extends State<RidePrefForm> {
     // 1- Select a location
     Location? selectedLocation = await Navigator.of(context).push<Location>(
       AnimationUtils.createBottomToTopRoute(
-        BlaLocationPicker(initLocation: arrival),
+        BlaLocationPicker(),
       ),
     );
 
